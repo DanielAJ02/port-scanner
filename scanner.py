@@ -10,13 +10,15 @@ if len (sys.argv) < 2:
 target = sys.argv[1]   #sys.argv allows type what we want to scan after typing the scanner.py 
 print (f"Target: {target}")
 
-port = 80 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #creates a socket for IPV4 (AF_INET) using TCP(SOCK_STREAM)
-result = sock.connect_ex((target, port)) #tries to connect
+start_port = 1    #scanning from port one to 100
+end_port = 100
 
-if result == 0: #Instead of crashing, it returns 0 for success 
-    print(f"port {port} is open")
-else:
-    print(f"port {port} is closed") #and a non-zero for failure
+for port in range(start_port, end_port + 1): 
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #creates a sockrt for IPV4 using TCP
+    sock.settimeout(0.5) #sets timeout for checking if port is open to o.5 secs
+    result = sock.connect_ex((target, port))
 
-sock.close() #frees the connection; closes it once were done with it
+    if result == 0:
+        print(f"Port {port} is OPEN")
+
+    sock.close()
